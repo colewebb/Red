@@ -22,6 +22,7 @@ public class Red extends Application {
         history.add(homePage);                                  // adding the homepage to history
         address.setText(homePage);                              // setting the address bar to read the homepage url
         view.getEngine().load(homePage);                        // loading the homepage
+
         back.setOnMouseClicked(e -> {                               // back button lambda TODO: broken back button
             String current = view.getEngine().getLocation();        // get the current position
             System.out.println(history.size());                     // print debugging info
@@ -32,6 +33,7 @@ public class Red extends Application {
                 }                                                   //
             }                                                       //
         });                                                         // end of back button lambda
+
         forward.setOnMouseClicked(e -> {                        // forward button lambda TODO: broken forward button
             String current = view.getEngine().getLocation();    // get the current url
             for (int i = 0; i < history.size() - 1; i++) {      // search for the current url in history
@@ -41,16 +43,19 @@ public class Red extends Application {
                 }                                               //
             }                                                   //
         });                                                     // end of forward lambda
+
         view.setOnMouseClicked(e -> {                       // link clicked lambda TODO: don't add the address more than once in a row
             String toGo = view.getEngine().getLocation();   // get current location
             history.add(toGo);                              // update history
             address.setText(toGo);                          // set address bar
         });                                                 // end of link clicked lambda
+
         p.add(back, 0, 0, 1, 1);        // add the back button
         p.add(forward, 1, 0, 1, 1);     // add the forward button
         p.add(address, 2, 0, 8, 1);     // add the address bar
-        p.add(view, 0, 1, 10, 1);       // add the webview TODO: why all the extra space?
+        p.add(view, 0, 1, 10, 1);       // add the webview
         Scene sc = new Scene(p);        // new scene
+        st.setWidth(750);               // setting the stage's width
         st.setScene(sc);                // set the scene
         st.setTitle("Red Web Browser"); // set the title
         st.show();                      // show everything
