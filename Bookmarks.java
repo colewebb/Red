@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -111,19 +112,17 @@ public class Bookmarks {
         Stage st = new Stage();                         // new stage
         BorderPane bookmarkPane = new BorderPane();     // borderpane
         ListView<String> list = new ListView<String>(); // ListView for bookmarks
-        Button add = new Button("Add");
-        Button delete = new Button("Delete");
-        Button go = new Button ("Go!");
-        HBox bottomBar = new HBox(add, delete, go);
+        Button add = new Button("Add");                 // add button
+        Button delete = new Button("Delete");           // delete button
+        Button go = new Button ("Go!");                 // go button
+        HBox bottomBar = new HBox(add, delete, go);     // hbox for bottom bar
         Scene bookmarkScene = new Scene(bookmarkPane);  // scene
-        // Label bookmarkLabel = new Label("Test");        // testing label
-        // bookmarkPane.setTop(bookmarkLabel);             // putting things in the pane
-        bookmarkPane.setCenter(list);                   //
-        bookmarkPane.setBottom(bottomBar);
+        bookmarkPane.setCenter(list);                   // add list to pane
+        bookmarkPane.setBottom(bottomBar);              // add bottom bar to pane
         bookmarkPane.setMaxSize(300, 400);              // setting the window size
-        st.setScene(bookmarkScene);                     //
-        st.setTitle("Red Bookmarks");
-        st.setAlwaysOnTop(true);
-        st.show();                                      //
+        st.setScene(bookmarkScene);                     // setting scene
+        st.setTitle("Red Bookmarks");                   // setting title
+        st.setAlwaysOnTop(true);                        // making window always on top
+        st.show();                                      // showing the stage
     }
 }
