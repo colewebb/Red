@@ -1,12 +1,17 @@
 import java.util.ArrayList;
 
 import javafx.application.Application;
+// import javafx.geometry.Pos;
 import javafx.stage.Stage;
-import javafx.scene.layout.BorderPane;
+// import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+// import javafx.scene.image.Image;
+// import javafx.scene.image.ImageView;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+// import javafx.scene.control.Label;
 import javafx.scene.web.WebView;
 
 public class Red extends Application {
@@ -14,6 +19,7 @@ public class Red extends Application {
     TextField address = new TextField();                        // new text field, for address
     Button back = new Button(" < ");                            // new back button
     Button forward = new Button(" > ");                         // new forward button
+    Button bookmarks = new Button("Bookmarks");
     WebView view = new WebView();                               // new webview, for viewing the web
     ArrayList<String> history = new ArrayList<String>();        // new arraylist for tracking history
     public void start(Stage st) {                               // start
@@ -21,7 +27,12 @@ public class Red extends Application {
         String homePage = "https://google.com";                 // setting homepage
         history.add(homePage);                                  // adding the homepage to history
         address.setText(homePage);                              // setting the address bar to read the homepage url
+        address.setPromptText("Enter a web address here...");   // setting prompt text
         view.getEngine().load(homePage);                        // loading the homepage
+        bookmarks.setOnMouseClicked(e -> {
+            Bookmarks b = new Bookmarks();
+            b.start();
+        });
 
         back.setOnMouseClicked(e -> {                               // back button lambda TODO: broken back button
             String current = view.getEngine().getLocation();        // get the current position
@@ -33,6 +44,13 @@ public class Red extends Application {
                 }                                                   //
             }                                                       //
         });                                                         // end of back button lambda
+
+        address.setOnKeyPressed(e -> {                          // address textfield lambda
+            if (e.getCode() == KeyCode.ENTER) {                 // 
+                view.getEngine().load(address.getText());       //
+                history.add(view.getEngine().getLocation());    //
+            }                                                   // 
+        });                                                     // end of address textfield lambda
 
         forward.setOnMouseClicked(e -> {                        // forward button lambda TODO: broken forward button
             String current = view.getEngine().getLocation();    // get the current url
@@ -50,9 +68,10 @@ public class Red extends Application {
             address.setText(toGo);                          // set address bar
         });                                                 // end of link clicked lambda
 
-        p.add(back, 0, 0, 1, 1);        // add the back button
-        p.add(forward, 1, 0, 1, 1);     // add the forward button
-        p.add(address, 2, 0, 8, 1);     // add the address bar
+        p.add(bookmarks, 0, 0, 1, 1);   // add the bookmarks button
+        p.add(back, 1, 0, 1, 1);        // add the back button
+        p.add(forward, 2, 0, 1, 1);     // add the forward button
+        p.add(address, 3, 0, 7, 1);     // add the address bar
         p.add(view, 0, 1, 10, 1);       // add the webview
         Scene sc = new Scene(p);        // new scene
         st.setWidth(750);               // setting the stage's width

@@ -2,7 +2,19 @@ import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.Scanner;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class Bookmarks {
     private ArrayList<String> names = new ArrayList<String>();
@@ -24,8 +36,18 @@ public class Bookmarks {
             e.printStackTrace();                    //
         }                                           //
     }
-    public void write () {              // method to write the bookmarks back to the file
-
+    public void write () {                                              // method to write the bookmarks back to the file
+        try {                                                           //
+            FileWriter fw = new FileWriter ("./bookmarks.txt", false);  //
+            for (int i = 0; i < names.size(); i++) {                    //
+                fw.write(names.get(i) + "\n");                          //
+                fw.write(urls.get(i)+"\n");                             //
+            }                                                           //
+            fw.close();                                                 //
+        }                                                               //
+        catch  (Exception e) {                                          //
+            e.printStackTrace();                                        //
+        }                                                               //
     }
     public void refresh () {    // refreshes the bookmark file
         write();                //
@@ -71,5 +93,37 @@ public class Bookmarks {
             }                                       //
         }                                           //
         return false;                               //
+    }
+    // public static void main(String[] args) {
+    //     try {
+    //         Bookmarks b = new Bookmarks();
+    //         b.read();
+    //         b.add("Home", "https://google.com");
+    //         System.out.println(b.get("Home"));
+    //         b.write();
+    //     }
+    //     catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+    public void start() {
+        refresh();
+        Stage st = new Stage();                         // new stage
+        BorderPane bookmarkPane = new BorderPane();     // borderpane
+        ListView<String> list = new ListView<String>(); // ListView for bookmarks
+        Button add = new Button("Add");
+        Button delete = new Button("Delete");
+        Button go = new Button ("Go!");
+        HBox bottomBar = new HBox(add, delete, go);
+        Scene bookmarkScene = new Scene(bookmarkPane);  // scene
+        // Label bookmarkLabel = new Label("Test");        // testing label
+        // bookmarkPane.setTop(bookmarkLabel);             // putting things in the pane
+        bookmarkPane.setCenter(list);                   //
+        bookmarkPane.setBottom(bottomBar);
+        bookmarkPane.setMaxSize(300, 400);              // setting the window size
+        st.setScene(bookmarkScene);                     //
+        st.setTitle("Red Bookmarks");
+        st.setAlwaysOnTop(true);
+        st.show();                                      //
     }
 }
