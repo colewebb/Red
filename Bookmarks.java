@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,7 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Bookmarks {
+public class Bookmarks extends Red {
     private ArrayList<String> names = new ArrayList<String>();
     private ArrayList<String> urls = new ArrayList<String>();
     public Bookmarks () {   // constructor: reads in bookmarks from file and fills in local arraylists
@@ -52,6 +54,8 @@ public class Bookmarks {
     }
     public void refresh () {    // refreshes the bookmark file
         write();                //
+        names.clear();          //
+        urls.clear();           //
         read();                 //
     }
     public void add (String name, String url) throws FileAlreadyExistsException {   // method to add a bookmark
@@ -95,27 +99,41 @@ public class Bookmarks {
         }                                           //
         return false;                               //
     }
-    // public static void main(String[] args) {
-    //     try {
-    //         Bookmarks b = new Bookmarks();
-    //         b.read();
-    //         b.add("Home", "https://google.com");
-    //         System.out.println(b.get("Home"));
-    //         b.write();
-    //     }
-    //     catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
+    public void onAdd() {
+        String toBookmarkURL = super.getLocation();
+        String toBookmarkName = view.getEngine().getTitle();
+        try {
+            this.add(toBookmarkName, toBookmarkURL);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            refresh();
+        }
+        
+    }
+    public void onDelete(String name) {
+
+    }
+    public void onGo (String name) {
+
+    }
     public void start() {
         refresh();
         Stage st = new Stage();                         // new stage
         BorderPane bookmarkPane = new BorderPane();     // borderpane
-        ListView<String> list = new ListView<String>(); // ListView for bookmarks
+        ListView<String> list = new ListView<String>(   // ListView for bookmarks
+            FXCollections.observableArrayList(          //
+                this.getAllNames()));                   // 
         Button add = new Button("Add");                 // add button
+        add.setOnMouseClicked(e -> {
+            this.onAdd();
+        });
         Button delete = new Button("Delete");           // delete button
         Button go = new Button ("Go!");                 // go button
         HBox bottomBar = new HBox(add, delete, go);     // hbox for bottom bar
+        bottomBar.setAlignment(Pos.CENTER);             // setting bottom bar alignment
         Scene bookmarkScene = new Scene(bookmarkPane);  // scene
         bookmarkPane.setCenter(list);                   // add list to pane
         bookmarkPane.setBottom(bottomBar);              // add bottom bar to pane

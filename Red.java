@@ -19,9 +19,15 @@ public class Red extends Application {
     TextField address = new TextField();                        // new text field, for address
     Button back = new Button(" < ");                            // new back button
     Button forward = new Button(" > ");                         // new forward button
-    Button bookmarks = new Button("Bookmarks");
+    Button bookmarks = new Button("Bookmarks");                 // Bookmarks button
     WebView view = new WebView();                               // new webview, for viewing the web
     ArrayList<String> history = new ArrayList<String>();        // new arraylist for tracking history
+    public void loadTheThing(String url) {
+        view.getEngine().load(url);
+    }
+    public String getLocation () {
+        return view.getEngine().getLocation();
+    }
     public void start(Stage st) {                               // start
         address.setMinWidth(700);                               // set the address bar's width
         String homePage = "https://google.com";                 // setting homepage
