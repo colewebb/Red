@@ -99,24 +99,23 @@ public class Bookmarks extends Red {
         }                                           //
         return false;                               //
     }
-    public void onAdd() {
-        String toBookmarkURL = super.getLocation();
-        String toBookmarkName = view.getEngine().getTitle();
-        try {
-            this.add(toBookmarkName, toBookmarkURL);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            refresh();
-        }
-        
+    public void onAdd() {                                       // method for the add button
+        String toBookmarkURL = super.getLocation();             // grab current location
+        String toBookmarkName = view.getEngine().getTitle();    // grab current location's title
+        try {                                                   //
+            this.add(toBookmarkName, toBookmarkURL);            // add the bookmark to the file
+        }                                                       //
+        catch (Exception e) {                                   //
+            e.printStackTrace();                                //
+        }                                                       //
+        finally {                                               //
+            refresh();                                          // refresh when done
+        }                                                       //                            
     }
-    public void onDelete(String name) {
+    public void onDelete(String name) {     // method for the delete button
 
     }
-    public void onGo (String name) {
+    public void onGo (String name) {        // method for the go button
 
     }
     public void start() {
@@ -127,11 +126,17 @@ public class Bookmarks extends Red {
             FXCollections.observableArrayList(          //
                 this.getAllNames()));                   // 
         Button add = new Button("Add");                 // add button
-        add.setOnMouseClicked(e -> {
-            this.onAdd();
-        });
+        add.setOnMouseClicked(e -> {                    // add button lambda
+            this.onAdd();                               //
+        });                                             // end add button lambda
         Button delete = new Button("Delete");           // delete button
+        delete.setOnMouseClicked(e -> {                 // delete button lambda
+            this.onDelete("test");                      //
+        });                                             // end delete button lambda
         Button go = new Button ("Go!");                 // go button
+        go.setOnMouseClicked(e -> {                     // go button lambda
+            this.onGo("test");                          //
+        });                                             //end go button lambda
         HBox bottomBar = new HBox(add, delete, go);     // hbox for bottom bar
         bottomBar.setAlignment(Pos.CENTER);             // setting bottom bar alignment
         Scene bookmarkScene = new Scene(bookmarkPane);  // scene
