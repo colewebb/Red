@@ -32,15 +32,16 @@ public class Red extends Application {
     Button bookmarks = new Button("Bookmarks");                 // Bookmarks button
     WebView view = new WebView();                               // new webview, for viewing the web
     ArrayList<String> history = new ArrayList<String>();        // new arraylist for tracking history
-    protected void loadTheThing(String url) {   // method for loading something in the current webview
-        view.getEngine().load(url);             //
+    String homePage = "https://cs.usu.edu";                     // setting homepage
+
+    protected void loadTheThing(String url) {                   // method for loading something in the current webview
+        view.getEngine().load(url);                             //
     }
-    protected String getLocation () {           // method for getting current location
-        return view.getEngine().getLocation();  //
+    protected String getLocation () {                           // method for getting current location
+        return view.getEngine().getLocation();                  //
     }
     public void start(Stage st) {                               // start
         address.setMinWidth(700);                               // set the address bar's width
-        String homePage = "https://cs.usu.edu";                 // setting homepage
         history.add(homePage);                                  // adding the homepage to history
         address.setText(homePage);                              // setting the address bar to read the homepage url
         address.setPromptText("Enter a web address here...");   // setting prompt text
