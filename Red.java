@@ -29,7 +29,6 @@ public class Red extends Application {
     GridPane p = new GridPane();                                // new GridPane
     TextField address = new TextField();                        // new text field, for address
     Button back = new Button(" < ");                            // new back button
-    Button forward = new Button(" > ");                         // new forward button
     Button bookmarks = new Button("Bookmarks");                 // Bookmarks button
     WebView view = new WebView();                               // new webview, for viewing the web
     ArrayList<String> history = new ArrayList<String>();        // new arraylist for tracking history
@@ -41,7 +40,7 @@ public class Red extends Application {
     }
     public void start(Stage st) {                               // start
         address.setMinWidth(700);                               // set the address bar's width
-        String homePage = "https://google.com";                 // setting homepage
+        String homePage = "https://cs.usu.edu";                 // setting homepage
         history.add(homePage);                                  // adding the homepage to history
         address.setText(homePage);                              // setting the address bar to read the homepage url
         address.setPromptText("Enter a web address here...");   // setting prompt text
@@ -69,16 +68,6 @@ public class Red extends Application {
             }                                                   // 
         });                                                     // end of address textfield lambda
 
-        forward.setOnMouseClicked(e -> {                        // forward button lambda TODO: broken forward button
-            String current = view.getEngine().getLocation();    // get the current url
-            for (int i = 0; i < history.size() - 1; i++) {      // search for the current url in history
-                if (current.equals(history.get(i))) {           // when you find it
-                    view.getEngine().load(history.get(i + 1));  // load the next url
-                    address.setText(history.get(i + 1));        // and set the address bar accordingly TODO: make sure this doesn't crash if there is no forward
-                }                                               //
-            }                                                   //
-        });                                                     // end of forward lambda
-
         view.setOnMouseClicked(e -> {                       // link clicked lambda TODO: don't add the address more than once in a row
             String toGo = view.getEngine().getLocation();   // get current location
             history.add(toGo);                              // update history
@@ -87,8 +76,7 @@ public class Red extends Application {
 
         p.add(bookmarks, 0, 0, 1, 1);   // add the bookmarks button
         p.add(back, 1, 0, 1, 1);        // add the back button
-        p.add(forward, 2, 0, 1, 1);     // add the forward button
-        p.add(address, 3, 0, 7, 1);     // add the address bar
+        p.add(address, 2, 0, 8, 1);     // add the address bar
         p.add(view, 0, 1, 10, 1);       // add the webview
         Scene sc = new Scene(p);        // new scene
         st.setWidth(750);               // setting the stage's width
