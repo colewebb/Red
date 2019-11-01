@@ -1,17 +1,15 @@
-import java.util.ArrayList;
+// Specs
+// 
+// - 
 
+import java.util.ArrayList;
 import javafx.application.Application;
-// import javafx.geometry.Pos;
 import javafx.stage.Stage;
-// import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-// import javafx.scene.image.Image;
-// import javafx.scene.image.ImageView;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-// import javafx.scene.control.Label;
 import javafx.scene.web.WebView;
 
 public class Red extends Application {
@@ -22,11 +20,11 @@ public class Red extends Application {
     Button bookmarks = new Button("Bookmarks");                 // Bookmarks button
     WebView view = new WebView();                               // new webview, for viewing the web
     ArrayList<String> history = new ArrayList<String>();        // new arraylist for tracking history
-    public void loadTheThing(String url) {
-        view.getEngine().load(url);
+    protected void loadTheThing(String url) {   // method for loading something in the current webview
+        view.getEngine().load(url);             //
     }
-    public String getLocation () {
-        return view.getEngine().getLocation();
+    protected String getLocation () {           // method for getting current location
+        return view.getEngine().getLocation();  //
     }
     public void start(Stage st) {                               // start
         address.setMinWidth(700);                               // set the address bar's width
