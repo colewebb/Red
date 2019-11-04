@@ -53,6 +53,7 @@ public class Bookmarks extends Red {
         read();                 //
     }
     public void add (String name, String url) throws FileAlreadyExistsException {   // method to add a bookmark
+        // System.out.println(name + " " + url);
         for (int i = 0; i < names.size(); i++) {                                    // 
             if (name.equals(names.get(i))) {                                        // check to be sure that a bookmark with the given name doesn't already exist
                 throw new FileAlreadyExistsException(name);                         // throw FileAlreadyExists exception if it does
@@ -96,6 +97,7 @@ public class Bookmarks extends Red {
     public void onAdd() {                                       // method for the add button
         String toBookmarkURL = super.getLocation();             // grab current location
         String toBookmarkName = view.getEngine().getTitle();    // grab current location's title
+        // System.out.println(toBookmarkName + " " + toBookmarkURL);
         try {                                                   //
             this.add(toBookmarkName, toBookmarkURL);            // add the bookmark to the file
         }                                                       //
