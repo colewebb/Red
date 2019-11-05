@@ -1,7 +1,7 @@
 // Specs
 // 
 // - due last week of class, for presentations
-// - two types of javafx panes
+// - two types of javafx panes                      (done)
 // - six types of nodes
 // - an animation
 // - demonstrate events, bindings and listeners
@@ -17,17 +17,21 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
-
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.web.WebView;
 
 public class Red extends Application {
@@ -36,10 +40,13 @@ public class Red extends Application {
     Button back = new Button(" < ");                            // new back button
     Button bookmarks = new Button("Bookmark");                  // Bookmarks button
     WebView view = new WebView();                               // new webview, for viewing the web
-    ArrayList<String> history = new ArrayList<String>();        // new arraylist for tracking history
     String homePage = "https://cs.usu.edu";                     // setting homepage
-    ComboBox<String> cbo = new ComboBox<>();
-    ArrayList<String> bookmarkList = new ArrayList<>();
+    ComboBox<String> cbo = new ComboBox<>();                    // new combobox for bookmarks
+    ArrayList<String> bookmarkList = new ArrayList<>();         // list of bookmarks
+    HBox bottom = new HBox();
+    Label title = new Label();
+    Button about = new Button("About");
+
     public void read () {                           // method to read bookmarks from file and populate local variables
         File open = new File("./bookmarks.txt");    // open the file
         try {                                       // 
@@ -53,6 +60,7 @@ public class Red extends Application {
             e.printStackTrace();                    //
         }                                           //
     }
+
     public void write () {                                              // method to write the bookmarks back to the file
         try {                                                           //
             FileWriter fw = new FileWriter ("./bookmarks.txt", false);  //
@@ -65,74 +73,83 @@ public class Red extends Application {
             e.printStackTrace();                                        //
         }                                                               //
     }
+
     public void refresh () {
         write();
         bookmarkList.clear();
         read();
     }
+
     protected void loadTheThing(String url) {                   // method for loading something in the current webview
         view.getEngine().load(url);                             //
     }
+
     protected String getLocation () {                           // method for getting current location
         return view.getEngine().getLocation();                  //
     }
+    
     public void start(Stage st) {                               // start
         read();                                                 //
-        // cbo.getItems().add("Bookmarks");
+        bottom.setAlignment(Pos.CENTER_LEFT);
         ObservableList<String> forCbo =                         //
             FXCollections.observableArrayList(bookmarkList);    //
         cbo.getItems().addAll(forCbo);                          //
         address.setMinWidth(700);                               // set the address bar's width
-        history.add(homePage);                                  // adding the homepage to history
         address.setText(homePage);                              // setting the address bar to read the homepage url
         address.setPromptText("Enter a web address here...");   // setting prompt text
         view.getEngine().load(homePage);                        // loading the homepage
-        cbo.setOnAction(e -> {
-            // if (cbo.getValue().equals("Bookmarks")) {
-            //     Bookmarks b = new Bookmarks();
-            //     b.start();
-            // }
-            // else {
-                view.getEngine().load(cbo.getValue());
-                address.setText(view.getEngine().getLocation());
-            // }
-        });
+
+        cbo.setOnAction(e -> {                                  // combobox lambda
+            view.getEngine().load(cbo.getValue());              // load the address from the combobox
+            address.setText(view.getEngine().getLocation());    // set the address bar text
+        });                                                     // end of combobox lambda
+
         // TODO: bind address bar to current location in the webview
-        bookmarks.setOnMouseClicked(e -> {
-            String toBookmark = view.getEngine().getLocation();
-            bookmarkList.add(toBookmark);
-            refresh();
-            cbo.getItems().add(toBookmark);
-        });
-        
+        bookmarks.setOnMouseClicked(e -> {                          // bookmark button lambda
+            String toBookmark = view.getEngine().getLocation();     // get the current location
+            bookmarkList.add(toBookmark);                           // add the location to the list
+            refresh();                                              // refresh the list
+            cbo.getItems().add(toBookmark);                         // add the current to the combobox
+        });                                                         // end bookmark button lambda
+
         back.setOnMouseClicked(e -> {                               // back button lambda TODO: broken back button
-            String current = view.getEngine().getLocation();        // get the current position
-            System.out.println(history.size());                     // print debugging info
-            for (int i = 0; i < history.size(); i++) {              // search history for the current location
-                if (current.equals(history.get(i))) {               // when you find it
-                    view.getEngine().load(history.get(i - 1));      // load the address we were at before
-                    address.setText(history.get(i - 1));            // and set the address bar accordingly
-                }                                                   //
-            }                                                       //
         });                                                         // end of back button lambda
 
         address.setOnKeyPressed(e -> {                          // address textfield lambda
             if (e.getCode() == KeyCode.ENTER) {                 // 
                 view.getEngine().load(address.getText());       //
-                history.add(view.getEngine().getLocation());    //
             }                                                   // 
         });                                                     // end of address textfield lambda
-
+        about.setOnMouseClicked(e -> {
+            Stage about = new Stage();                              // new stage
+            Pane aboutPane = new Pane();                            // new pane
+            VBox vb = new VBox();                                   // new vbox
+            // TODO: find a red animated logo for this thing
+            vb.getChildren().add(new Label("Red Web Browser"));     // label
+            vb.getChildren().add(new Label("'Pathetic Penguin'"));  // label
+            vb.getChildren().add(new Label("This is free software, distributed without any promise of \nsupport or fitness for a specific task. Licensed under the \nGNU Public License v3."));
+            aboutPane.getChildren().add(vb);                        // add the vbox to the pane
+            Scene aboutScene = new Scene(aboutPane);                // new scene
+            about.setScene(aboutScene);                             // set scene
+            about.setTitle("About");                                // set title
+            about.setMinWidth(250);                                 // set width
+            about.setMinHeight(125);                                // set height
+            about.show();                                           // show
+        });
         view.setOnMouseClicked(e -> {                       // link clicked lambda TODO: don't add the address more than once in a row
             String toGo = view.getEngine().getLocation();   // get current location
-            history.add(toGo);                              // update history
             address.setText(toGo);                          // set address bar
         });                                                 // end of link clicked lambda
-        p.add(bookmarks, 0, 0, 1, 1);
+        title.textProperty().bind(view.getEngine().titleProperty());    // bind the title of the webpage to a label
+        bottom.getChildren().add(about);                                // add the about button the bottom
+        bottom.getChildren().add(title);                                // add the title label to the bottom
+        cbo.setMaxWidth(150);           // set the width of the combobox
+        p.add(bookmarks, 0, 0, 1, 1);   // add bookmark button
         p.add(back, 1, 0, 1, 1);        // add the back button
         p.add(address, 2, 0, 5, 1);     // add the address bar
-        p.add(cbo, 7, 0, 3, 1);
+        p.add(cbo, 7, 0, 3, 1);         // add combobox
         p.add(view, 0, 1, 10, 1);       // add the webview
+        p.add(bottom, 0, 2, 10, 1);     // add the bottom
         Scene sc = new Scene(p);        // new scene
         st.setWidth(750);               // setting the stage's width
         st.setScene(sc);                // set the scene
