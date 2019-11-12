@@ -14,7 +14,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class Bookmarks extends Red {
-    private ArrayList<String> names = new ArrayList<String>();
     private ArrayList<String> urls = new ArrayList<String>();
     public Bookmarks () {   // constructor: reads in bookmarks from file and fills in local arraylists
         read();             // read in bookmarks from file
@@ -24,8 +23,7 @@ public class Bookmarks extends Red {
         try {                                       // 
             Scanner read = new Scanner(open);       // read the file
             while (read.hasNextLine()) {            // while there's still stuff in file
-                names.add(read.nextLine());         // line n is the name
-                urls.add(read.nextLine());          // and line n+1 is the address
+                urls.add(read.nextLine());          // read the URLs out
             }                                       //
             read.close();                           // close the file
         }                                           //
@@ -36,8 +34,7 @@ public class Bookmarks extends Red {
     public void write () {                                              // method to write the bookmarks back to the file
         try {                                                           //
             FileWriter fw = new FileWriter ("./bookmarks.txt", false);  //
-            for (int i = 0; i < names.size(); i++) {                    //
-                fw.write(names.get(i) + "\n");                          //
+            for (int i = 0; i < urls.size(); i++) {                     //
                 fw.write(urls.get(i)+"\n");                             //
             }                                                           //
             fw.close();                                                 //
@@ -48,34 +45,17 @@ public class Bookmarks extends Red {
     }
     public void refresh () {    // refreshes the bookmark file
         write();                //
-        names.clear();          //
         urls.clear();           //
         read();                 //
     }
-    public void add (String name, String url) throws FileAlreadyExistsException {   // method to add a bookmark
+    public void add (String url) throws FileAlreadyExistsException {   // method to add a bookmark
         // System.out.println(name + " " + url);
-        for (int i = 0; i < names.size(); i++) {                                    // 
-            if (name.equals(names.get(i))) {                                        // check to be sure that a bookmark with the given name doesn't already exist
-                throw new FileAlreadyExistsException(name);                         // throw FileAlreadyExists exception if it does
+        for (int i = 0; i < urls.size(); i++) {                                    // 
+            if (url.equals(urls.get(i))) {                                        // check to be sure that a bookmark with the given name doesn't already exist
+                throw new FileAlreadyExistsException(url);                         // throw FileAlreadyExists exception if it does
             }                                                                       //
         }                                                                           //
-        names.add(name);                                                            // add the name
         urls.add(url);                                                              // add the address
-    }
-    public String get (String name) throws FileNotFoundException {      // gets the address given the name
-        for (int i = 0; i < names.size(); i++) {                        // basic find
-            if (name.equals(names.get(i))) {                            //
-                return urls.get(i);                                     //
-            }                                                           //
-        }                                                               //
-        throw new FileNotFoundException(name);                          // throws FileNotFound exception if the bookmark isn't found
-    }
-    public String[] getAllNames () {                    // returns a list of all the names
-        String[] toReturn = new String[names.size()];   //
-        for (int i = 0; i < names.size(); i++) {        //
-            toReturn[i] = names.get(i);                 //
-        }                                               //
-        return toReturn;                                //
     }
     public String[] getAllURLs () {                     // returns a list of all the addresses
         String[] toReturn = new String[urls.size()];    //
@@ -84,10 +64,9 @@ public class Bookmarks extends Red {
         }                                               //
         return toReturn;                                //
     }
-    public boolean delete (String name) {           // deleting a bookmark, given its name (returns true if successful deletion, false otherwise)
-        for (int i = 0; i < names.size(); i++) {    // 
-            if (name.equals(names.get(i))) {        //
-                names.remove(i);                    //
+    public boolean delete (String url) {           // deleting a bookmark, given its name (returns true if successful deletion, false otherwise)
+        for (int i = 0; i < urls.size(); i++) {    // 
+            if (url.equals(urls.get(i))) {        //
                 urls.remove(i);                     //
                 return true;                        //
             }                                       //
@@ -99,7 +78,7 @@ public class Bookmarks extends Red {
         String toBookmarkName = view.getEngine().getTitle();    // grab current location's title
         // System.out.println(toBookmarkName + " " + toBookmarkURL);
         try {                                                   //
-            this.add(toBookmarkName, toBookmarkURL);            // add the bookmark to the file
+            this.add(toBookmarkURL);            // add the bookmark to the file
         }                                                       //
         catch (Exception e) {                                   //
             e.printStackTrace();                                //
@@ -120,7 +99,7 @@ public class Bookmarks extends Red {
         BorderPane bookmarkPane = new BorderPane();     // borderpane
         ListView<String> list = new ListView<String>(   // ListView for bookmarks
             FXCollections.observableArrayList(          //
-                this.getAllNames()));                   // 
+                this.getAllURLs()));                   // 
         Button add = new Button("Add");                 // add button
         add.setOnMouseClicked(e -> {                    // add button lambda
             this.onAdd();                               //
