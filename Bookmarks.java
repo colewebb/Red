@@ -1,4 +1,3 @@
-import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.io.File;
@@ -18,6 +17,7 @@ public class Bookmarks extends Red {
     public Bookmarks () {   // constructor: reads in bookmarks from file and fills in local arraylists
         read();             // read in bookmarks from file
     }                       //
+
     public void read () {                           // method to read bookmarks from file and populate local variables
         File open = new File("./bookmarks.txt");    // open the file
         try {                                       // 
@@ -30,7 +30,8 @@ public class Bookmarks extends Red {
         catch (Exception e) {                       // catch the exception
             e.printStackTrace();                    //
         }                                           //
-    }
+    }                                               //
+
     public void write () {                                              // method to write the bookmarks back to the file
         try {                                                           //
             FileWriter fw = new FileWriter ("./bookmarks.txt", false);  //
@@ -42,43 +43,45 @@ public class Bookmarks extends Red {
         catch  (Exception e) {                                          //
             e.printStackTrace();                                        //
         }                                                               //
-    }
+    }                                                                   //
+
     public void refresh () {    // refreshes the bookmark file
         write();                //
         urls.clear();           //
         read();                 //
-    }
+    }                           //
+
     public void add (String url) throws FileAlreadyExistsException {   // method to add a bookmark
-        // System.out.println(name + " " + url);
-        for (int i = 0; i < urls.size(); i++) {                                    // 
-            if (url.equals(urls.get(i))) {                                        // check to be sure that a bookmark with the given name doesn't already exist
-                throw new FileAlreadyExistsException(url);                         // throw FileAlreadyExists exception if it does
-            }                                                                       //
-        }                                                                           //
-        urls.add(url);                                                              // add the address
-    }
+        for (int i = 0; i < urls.size(); i++) {                        // 
+            if (url.equals(urls.get(i))) {                             // check to be sure that a bookmark with the given name doesn't already exist
+                throw new FileAlreadyExistsException(url);             // throw FileAlreadyExists exception if it does
+            }                                                          //
+        }                                                              //
+        urls.add(url);                                                 // add the address
+    }                                                                  //
+
     public String[] getAllURLs () {                     // returns a list of all the addresses
         String[] toReturn = new String[urls.size()];    //
         for (int i = 0; i < urls.size(); i++) {         //
             toReturn[i] = urls.get(i);                  //
         }                                               //
         return toReturn;                                //
-    }
-    public boolean delete (String url) {           // deleting a bookmark, given its name (returns true if successful deletion, false otherwise)
-        for (int i = 0; i < urls.size(); i++) {    // 
-            if (url.equals(urls.get(i))) {        //
+    }                                                   //
+
+    public boolean delete (String url) {            // deleting a bookmark, given its name (returns true if successful deletion, false otherwise)
+        for (int i = 0; i < urls.size(); i++) {     // 
+            if (url.equals(urls.get(i))) {          //
                 urls.remove(i);                     //
                 return true;                        //
             }                                       //
         }                                           //
         return false;                               //
-    }
+    }                                               //
+
     public void onAdd() {                                       // method for the add button
         String toBookmarkURL = super.getLocation();             // grab current location
-        String toBookmarkName = view.getEngine().getTitle();    // grab current location's title
-        // System.out.println(toBookmarkName + " " + toBookmarkURL);
         try {                                                   //
-            this.add(toBookmarkURL);            // add the bookmark to the file
+            this.add(toBookmarkURL);                            // add the bookmark to the file
         }                                                       //
         catch (Exception e) {                                   //
             e.printStackTrace();                                //
@@ -87,19 +90,22 @@ public class Bookmarks extends Red {
             refresh();                                          // refresh when done
         }                                                       //                            
     }
+
     public void onDelete(String name) {     // method for the delete button
 
     }
+
     public void onGo (String name) {        // method for the go button
 
     }
+
     public void start() {
         refresh();
         Stage st = new Stage();                         // new stage
         BorderPane bookmarkPane = new BorderPane();     // borderpane
         ListView<String> list = new ListView<String>(   // ListView for bookmarks
             FXCollections.observableArrayList(          //
-                this.getAllURLs()));                   // 
+                this.getAllURLs()));                    // 
         Button add = new Button("Add");                 // add button
         add.setOnMouseClicked(e -> {                    // add button lambda
             this.onAdd();                               //
@@ -122,5 +128,5 @@ public class Bookmarks extends Red {
         st.setTitle("Red Bookmarks");                   // setting title
         st.setAlwaysOnTop(true);                        // making window always on top
         st.show();                                      // showing the stage
-    }
+    }                                                   // 
 }
