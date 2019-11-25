@@ -16,33 +16,32 @@
 // - Save bookmarks to file for permeance                               (done)
 // - If string typed in address bar isn't a web address, web search it  (done)
 
-import java.io.File;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javafx.animation.FadeTransition;
-import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.web.WebView;
+import java.io.File;                        // all the imports
+import java.io.FileWriter;                  //
+import java.util.ArrayList;                 //
+import java.util.Scanner;                   //
+import java.util.regex.Matcher;             //
+import java.util.regex.Pattern;             //
+import javafx.animation.FadeTransition;     //
+import javafx.animation.Timeline;           //
+import javafx.application.Application;      //
+import javafx.collections.FXCollections;    //
+import javafx.collections.ObservableList;   //
+import javafx.stage.Stage;                  //
+import javafx.util.Duration;                //
+import javafx.scene.layout.GridPane;        //
+import javafx.scene.layout.HBox;            //
+import javafx.scene.layout.Pane;            //
+import javafx.scene.layout.VBox;            //
+import javafx.scene.paint.Color;            //
+import javafx.scene.shape.Circle;           //
+import javafx.scene.control.TextField;      //
+import javafx.scene.input.KeyCode;          //
+import javafx.scene.Scene;                  //
+import javafx.scene.control.Button;         //
+import javafx.scene.control.ComboBox;       //
+import javafx.scene.control.Label;          //
+import javafx.scene.web.WebView;            //
 
 public class Red extends Application {
     GridPane p = new GridPane();                                // new GridPane
@@ -125,7 +124,7 @@ public class Red extends Application {
         tabContainer.getChildren().addAll(newTab, closeTab);    // add tab control buttons
         ObservableList<String> forCbo =                         // make the list for the combobox
             FXCollections.observableArrayList(bookmarkList);    //
-        cbo.getItems().add("Bookmarks");
+        cbo.getItems().add("Bookmarks");                        //
         cbo.getItems().addAll(forCbo);                          // put the lsit in the combobox
         address.setMinWidth(700);                               // set the address bar's width
         address.setText(homePage);                              // setting the address bar to read the homepage url
@@ -133,10 +132,10 @@ public class Red extends Application {
         view.getEngine().load(homePage);                        // loading the homepage
 
         cbo.setOnAction(e -> {                                  // combobox lambda
-            if (cbo.getValue() == "Bookmarks") {
-                Bookmarks b = new Bookmarks();
-                b.start();
-            }
+            if (cbo.getValue() == "Bookmarks") {                // if the combobox is for the Bookmarks window
+                Bookmarks b = new Bookmarks();                  // open up the Bookmarks window
+                b.start();                                      //
+            }                                                   //
             view.getEngine().load(cbo.getValue());              // load the address from the combobox
             address.setText(view.getEngine().getLocation());    // set the address bar text
         });                                                     // end of combobox lambda
@@ -209,17 +208,17 @@ public class Red extends Application {
         title.textProperty().bind(view.getEngine().titleProperty());    // bind the title of the webpage to a label
         bottom.getChildren().add(about);                                // add the about button the bottom
         bottom.getChildren().add(title);                                // add the title label to the bottom
-        p.add(bookmarks, 0, 0, 1, 1);   // add bookmark button
-        p.add(back, 1, 0, 1, 1);        // add the back button
-        p.add(address, 2, 0, 5, 1);     // add the address bar
-        p.add(cbo, 7, 0, 3, 1);         // add combobox
-        p.add(tabContainer, 0, 1, 10, 1);
-        p.add(view, 0, 2, 10, 1);       // add the webview
-        p.add(bottom, 0, 3, 10, 1);     // add the bottom
-        Scene sc = new Scene(p);        // new scene
-        st.setWidth(750);               // setting the stage's width
-        st.setScene(sc);                // set the scene
-        st.setTitle("Red Web Browser"); // set the title
-        st.show();                      // show everything
+        p.add(bookmarks, 0, 0, 1, 1);       // add bookmark button
+        p.add(back, 1, 0, 1, 1);            // add the back button
+        p.add(address, 2, 0, 5, 1);         // add the address bar
+        p.add(cbo, 7, 0, 3, 1);             // add combobox
+        p.add(tabContainer, 0, 1, 10, 1);   // add the tab container
+        p.add(view, 0, 2, 10, 1);           // add the webview
+        p.add(bottom, 0, 3, 10, 1);         // add the bottom
+        Scene sc = new Scene(p);            // new scene
+        st.setWidth(750);                   // setting the stage's width
+        st.setScene(sc);                    // set the scene
+        st.setTitle("Red Web Browser");     // set the title
+        st.show();                          // show everything
     }
 }
