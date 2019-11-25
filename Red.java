@@ -59,8 +59,8 @@ public class Red extends Application {
     HBox bottom = new HBox();                                   // bottom bar hbox
     Label title = new Label();                                  // label for page title
     Button about = new Button("About");                         // about button
-    String[] history = new String[2];                           // history
-    Pattern urlCheck = Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");         // make a regex pattern
+    ArrayList<String> history = new ArrayList<>();              // history
+    Pattern urlCheck = Pattern.compile("^(https?|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");         // make a regex pattern
 
     public void read () {                           // method to read bookmarks from file and populate local variables
         File open = new File("./bookmarks.txt");    // open the file
@@ -97,23 +97,29 @@ public class Red extends Application {
 
     protected void loadTheThing(String url) {                   // method for loading something in the current webview
         view.getEngine().load(url);                             //
+    }                                                           //
+
+    public String parseText (String in) {
+        Matcher toCheck = urlCheck.matcher(in);                     // regex matcher
+        if (toCheck.matches()) {                                    // if the text matches url regex
+            return in;                                              // return it
+        }                                                           //
+        else {                                                      // if the text doesn't match url regex
+            String[] search = in.split("\\s+");                     // split the text on whitespace
+            String google = "http://www.google.com/search?q=";      // start building a google search url
+            for (String i : search) {                               // for each split string
+                google = google + i + "+";                          // add the string to the search url with a plus sign
+            }                                                       //
+            return google;                                          // return search string
+        }                                                           //
     }
 
-    public void onPageLoad () {                             // run on a page load
-        String location = view.getEngine().getLocation();   // get location
-        for (String newString : history) {                  // for everything in history
-            if (location.equals(newString)) {               // if the location is already in history
-                return;                                     // call it good
-            }                                               //
-        }                                                   //
-        if (history[1] != null) {                           // if the second entry is null
-            history[0] = history[1];                        // put the first entry in the second entry
-            history[1] = location;                          // put the location in the first entry
-        }                                                   //
-        else {                                              // otherwise
-            history[1] = location;                          // put the location in the second entry
-        }                                                   //
-    }                                                       //
+    // public void onPageLoad () {                             // run on a page load
+    //     String location = view.getEngine().getLocation();   // get location
+    //     if (history.contains(location) == false) {          // if the history hasn't seen this location before
+    //         history.add(location);
+    //     }
+    // }                                                       //
 
     protected String getLocation () {                           // method for getting current location
         return view.getEngine().getLocation();                  //
@@ -146,30 +152,26 @@ public class Red extends Application {
 
         bookmarks.setOnMouseClicked(e -> {                          // bookmark button lambda
             String toBookmark = view.getEngine().getLocation();     // get the current location
+            if (bookmarkList.contains(toBookmark)) {                // confirm that the place to bookmark is not already bookmarked
+                return;                                             // if so, exit the lambda
+            }                                                       // 
             bookmarkList.add(toBookmark);                           // add the location to the list
             refresh();                                              // refresh the list
             cbo.getItems().add(toBookmark);                         // add the current to the combobox
         });                                                         // end bookmark button lambda
 
         back.setOnMouseClicked(e -> {               // back button lambda TODO: broken back button
-            this.onPageLoad();                      // run onPageLoad
-            view.getEngine().load(history[0]);      // load the history
+            for (String i : history) {
+                System.out.println(i);
+            }
+            // this.onPageLoad();                      // run onPageLoad
+            view.getEngine().load(history.get(0));      // load the history
         });                                         // end of back button lambda
 
         address.setOnKeyPressed(e -> {                                      // address textfield lambda
             if (e.getCode() == KeyCode.ENTER) {                             // 
-                Matcher toCheck = urlCheck.matcher(address.getText());      // regex matcher
-                if (toCheck.matches()) {                                    // if the text matches url regex
-                    view.getEngine().load(address.getText());               // load the webpage in the address bar
-                }                                                           //
-                else {                                                      // if the text doesn't match url regex
-                    String[] search = address.getText().split("\\s+");      // split the text on whitespace
-                    String google = "http://www.google.com/search?q=";      // start building a google search url
-                    for (String i : search) {                               // for each split string
-                        google = google + i + "+";                          // add the string to the search url with a plus sign
-                    }                                                       //
-                    view.getEngine().load(google);                          // load the search url
-                }                                                           //
+                String toLoad = this.parseText(address.getText());
+                this.loadTheThing(toLoad);
             }                                                               // 
         });                                                                 // end of address textfield lambda
 
@@ -201,9 +203,16 @@ public class Red extends Application {
 
         view.setOnMouseClicked(e -> {                       // link clicked lambda TODO: don't add the address more than once in a row
             String toGo = view.getEngine().getLocation();   // get current location
-            this.onPageLoad();                              // run the pageLoad
+            // this.onPageLoad();                              // run the pageLoad
             address.setText(toGo);                          // set address bar
         });                                                 // end of link clicked lambda
+
+        newTab.setOnMouseClicked(e -> {
+            Tab toAdd = new Tab();
+            toAdd.load(homePage);
+            toAdd.begin();
+            tabContainer.getChildren().add(toAdd.getButton());
+        });
 
         title.textProperty().bind(view.getEngine().titleProperty());    // bind the title of the webpage to a label
         bottom.getChildren().add(about);                                // add the about button the bottom

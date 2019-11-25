@@ -20,10 +20,15 @@ public class Tab extends Red {
             current = true;         //
         }                           //
     }                               //
-    
+
     public void setCurrent (boolean set) {  // current setter
         current = set;                      //
     }                                       //
+
+    public void load (String toLoad) {
+        String send = super.parseText(toLoad);
+        view.getEngine().load(send);
+    }
     
     public WebView getView () {     // get the webview
         return view;                //
@@ -36,4 +41,18 @@ public class Tab extends Red {
     public Button getButton () {    // get the button
         return tabButton;           //
     }                               //
+
+    public void buttonOnClick () {
+        this.setCurrent(true);
+
+    }
+
+    public void begin () {
+        tabButton.textProperty().bind(view.getEngine().titleProperty());
+        tabButton.setOnMouseClicked(e -> {
+            super.view = this.view;
+            super.address.setText(this.view.getEngine().getLocation());
+            this.setCurrent(true);
+        });
+    }
 }
