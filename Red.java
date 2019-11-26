@@ -41,6 +41,8 @@ import javafx.scene.Scene;                  //
 import javafx.scene.control.Button;         //
 import javafx.scene.control.ComboBox;       //
 import javafx.scene.control.Label;          //
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.web.WebView;            //
 
 public class Red extends Application {
@@ -60,6 +62,7 @@ public class Red extends Application {
     Label title = new Label();                                  // label for page title
     Button about = new Button("About");                         // about button
     ArrayList<String> history = new ArrayList<>();              // history
+    TabPane tabPane = new TabPane();
     Pattern urlCheck = Pattern.compile("^(https?|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");         // make a regex pattern
 
     public void read () {                           // method to read bookmarks from file and populate local variables
@@ -127,7 +130,6 @@ public class Red extends Application {
     
     public void start(Stage st) {                               // start
         read();                                                 // read bookmarks
-        tabContainer.getChildren().addAll(newTab, closeTab);    // add tab control buttons
         ObservableList<String> forCbo =                         // make the list for the combobox
             FXCollections.observableArrayList(bookmarkList);    //
         cbo.getItems().add("Bookmarks");                        //
@@ -207,13 +209,6 @@ public class Red extends Application {
             address.setText(toGo);                          // set address bar
         });                                                 // end of link clicked lambda
 
-        newTab.setOnMouseClicked(e -> {
-            Tab toAdd = new Tab();
-            toAdd.load(homePage);
-            toAdd.begin();
-            tabContainer.getChildren().add(toAdd.getButton());
-        });
-
         title.textProperty().bind(view.getEngine().titleProperty());    // bind the title of the webpage to a label
         bottom.getChildren().add(about);                                // add the about button the bottom
         bottom.getChildren().add(title);                                // add the title label to the bottom
@@ -221,7 +216,6 @@ public class Red extends Application {
         p.add(back, 1, 0, 1, 1);            // add the back button
         p.add(address, 2, 0, 5, 1);         // add the address bar
         p.add(cbo, 7, 0, 3, 1);             // add combobox
-        p.add(tabContainer, 0, 1, 10, 1);   // add the tab container
         p.add(view, 0, 2, 10, 1);           // add the webview
         p.add(bottom, 0, 3, 10, 1);         // add the bottom
         Scene sc = new Scene(p);            // new scene
