@@ -35,6 +35,9 @@ public class Red extends Application {
         nextTab.textProperty().bind(nextTabContent.view.getEngine().titleProperty());   // bind the title of the webview to the title of the tab
         nextTab.setContent(nextTabContent.p);                                           // move the content to the tab
         pane.getTabs().add(nextTab);                                                    // add the tab to the tab pane
+        nextTab.setOnCloseRequest(e -> {                                                // prevent the newtab tab from opening more tabs if it's not the only tab open
+            pane.getSelectionModel().selectNext();                                      //
+        });                                                                             //
         pane.getSelectionModel().selectLast();                                          // move current tab
     }                                                                                   //
     
