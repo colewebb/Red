@@ -121,17 +121,13 @@ public class TabContent extends Red {
         read();                                                 // read bookmarks
         ObservableList<String> forCbo =                         // make the list for the combobox
             FXCollections.observableArrayList(bookmarkList);    //
-        cbo.getItems().add("Bookmarks");                        //
+        cbo.setPromptText("Bookmarks");                         // set title of bookmark combobox
         cbo.getItems().addAll(forCbo);                          // put the lsit in the combobox
         address.setMinWidth(700);                               // set the address bar's width
         address.setText(homePage);                              // setting the address bar to read the homepage url
         address.setPromptText("Enter a web address here...");   // setting prompt text
         view.getEngine().load(homePage);                        // loading the homepage
         cbo.setOnAction(e -> {                                  // combobox lambda
-            if (cbo.getValue() == "Bookmarks") {                // if the combobox is for the Bookmarks window
-                Bookmarks b = new Bookmarks();                  // open up the Bookmarks window
-                b.start();                                      // start the bookmark window
-            }                                                   //
             view.getEngine().load(cbo.getValue());              // load the address from the combobox
             address.setText(view.getEngine().getLocation());    // set the address bar text
         });                                                     // end of combobox lambda
@@ -154,29 +150,8 @@ public class TabContent extends Red {
         });                                                             // end of address textfield lambda
 
         about.setOnMouseClicked(e -> {
-            Stage about = new Stage();                              // new stage
-            Pane aboutPane = new Pane();                            // new pane
-            VBox vb = new VBox();                                   // new vbox
-            Circle icon = new Circle(75);                           // new circle
-            FadeTransition ft = new                                 // making a fade transition, for the icon
-                FadeTransition(Duration.millis(3000), icon);        //
-            ft.setFromValue(1.0);                                   // fades from opaque
-            ft.setToValue(0.0);                                     // to transparent
-            ft.setCycleCount(Timeline.INDEFINITE);                  // run the animation forever
-            ft.setAutoReverse(true);                                // reverse it
-            ft.play();                                              // play the animation
-            icon.setFill(Color.RED);                                // set the fill on the icon
-            vb.getChildren().add(icon);                             // add the icon
-            vb.getChildren().add(new Label("Red Web Browser"));     // label
-            vb.getChildren().add(new Label("'Pathetic Penguin'"));  // label
-            vb.getChildren().add(new Label("This is free software, distributed without any promise of \nsupport or fitness for a specific task. Licensed under the \nGNU Public License v3."));
-            aboutPane.getChildren().add(vb);                        // add the vbox to the pane
-            Scene aboutScene = new Scene(aboutPane);                // new scene
-            about.setScene(aboutScene);                             // set scene
-            about.setTitle("About");                                // set title
-            about.setMinWidth(250);                                 // set width
-            about.setMinHeight(125);                                // set height
-            about.show();                                           // show
+            Settings s = new Settings ();
+            s.start();
         });                                                         //
 
         view.setOnMouseClicked(e -> {                       // link clicked lambda TODO: don't add the address more than once in a row

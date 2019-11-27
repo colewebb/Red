@@ -91,12 +91,17 @@ public class Bookmarks extends Red {
         }                                                       //                            
     }
 
-    public void onDelete(String name) {     // method for the delete button
-
+    public void onDelete(String url) {     // method for the delete button
+        for (String i : urls) {
+            if (i.equals(url)) {
+                urls.remove(i);
+            }
+        }
+        refresh();
     }
 
-    public void onGo (String name) {        // method for the go button
-
+    public void onGo (String url) {        // method for the go button
+        super.newTab(url);
     }
 
     public void start() {
@@ -112,11 +117,12 @@ public class Bookmarks extends Red {
         });                                             // end add button lambda
         Button delete = new Button("Delete");           // delete button
         delete.setOnMouseClicked(e -> {                 // delete button lambda
-            this.onDelete("test");                      //
+            onDelete(list.getSelectionModel().getSelectedItem());
+            list.getItems().remove(list.getSelectionModel().getSelectedItem());
         });                                             // end delete button lambda
         Button go = new Button ("Go!");                 // go button
         go.setOnMouseClicked(e -> {                     // go button lambda
-            this.onGo("test");                          //
+            onGo(list.getSelectionModel().getSelectedItem());
         });                                             //end go button lambda
         HBox bottomBar = new HBox(add, delete, go);     // hbox for bottom bar
         bottomBar.setAlignment(Pos.CENTER);             // setting bottom bar alignment
