@@ -23,5 +23,6 @@
 hs_err_pid*
 # random stuff I added
 *.lnk
+*.docx
 # VS Code file
 .vscode
