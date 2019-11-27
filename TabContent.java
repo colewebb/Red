@@ -12,7 +12,7 @@
 // - Dropdown menu for adding favorite sites                            (done)
 // - Clicking on a link in dropdown loads it                            (done)
 // - Back button with 1-deep history (only load the previous site)
-// - Tabbed UI
+// - Tabbed UI                                                          (done)
 // - Save bookmarks to file for permeance                               (done)
 // - If string typed in address bar isn't a web address, web search it  (done)
 
@@ -26,7 +26,6 @@ import javafx.animation.FadeTransition;     //
 import javafx.animation.Timeline;           //
 import javafx.collections.FXCollections;    //
 import javafx.collections.ObservableList;   //
-import javafx.geometry.Pos;                 //
 import javafx.stage.Stage;                  //
 import javafx.util.Duration;                //
 import javafx.scene.layout.GridPane;        //
