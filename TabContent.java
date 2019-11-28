@@ -4,7 +4,7 @@
 // - two types of javafx panes                      (done)
 // - six types of nodes                             (done)
 // - an animation                                   (done)
-// - demonstrate events, bindings and listeners     (done)
+// - demonstrate events, bindings and listeners     (missing a listener)
 //
 // Web browser specifics:
 // - Address bar, with ability to type a web address and load it        (done)
@@ -22,24 +22,15 @@ import java.util.ArrayList;                 //
 import java.util.Scanner;                   //
 import java.util.regex.Matcher;             //
 import java.util.regex.Pattern;             //
-import javafx.animation.FadeTransition;     //
-import javafx.animation.Timeline;           //
 import javafx.collections.FXCollections;    //
 import javafx.collections.ObservableList;   //
-import javafx.stage.Stage;                  //
-import javafx.util.Duration;                //
-import javafx.scene.layout.GridPane;        //
-import javafx.scene.layout.HBox;            //
-import javafx.scene.layout.Pane;            //
-import javafx.scene.layout.VBox;            //
-import javafx.scene.paint.Color;            //
-import javafx.scene.shape.Circle;           //
-import javafx.scene.control.TextField;      //
-import javafx.scene.input.KeyCode;          //
-import javafx.scene.Scene;                  //
 import javafx.scene.control.Button;         //
 import javafx.scene.control.ComboBox;       //
 import javafx.scene.control.Label;          //
+import javafx.scene.control.TextField;      //
+import javafx.scene.input.KeyCode;          //
+import javafx.scene.layout.GridPane;        //
+import javafx.scene.layout.HBox;            //
 import javafx.scene.web.WebView;            //
 
 public class TabContent extends Red {
@@ -54,7 +45,7 @@ public class TabContent extends Red {
     HBox bottom = new HBox();                                   // bottom bar hbox
     Label title = new Label();                                  // label for page title
     Button about = new Button("About");                         // about button
-    ArrayList<String> history = new ArrayList<>();              // history
+    String[] history = new String[2];
     Pattern urlCheck = Pattern.compile("^(https?|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");         // make a regex pattern
 
     public void read () {                           // method to read bookmarks from file and populate local variables
@@ -143,22 +134,44 @@ public class TabContent extends Red {
         });                                                         // end bookmark button lambda
 
         address.setOnKeyPressed(e -> {                                  // address textfield lambda
-            if (e.getCode() == KeyCode.ENTER) {                         // 
+            if (e.getCode() == KeyCode.ENTER) {                         // if the key pressed is enter
                 String toLoad = this.parseText(address.getText());      // parse the text from the address bar
                 this.loadTheThing(toLoad);                              // load it
             }                                                           // 
         });                                                             // end of address textfield lambda
 
         about.setOnMouseClicked(e -> {
-            Settings s = new Settings ();
-            s.start();
-        });                                                         //
+            Settings s = new Settings();    // use settings instead of constructing in lambda
+            s.start();                      // start settings
+        });                                 //
 
-        view.setOnMouseClicked(e -> {                       // link clicked lambda TODO: don't add the address more than once in a row
+        view.setOnMouseClicked(e -> {                       // link clicked lambda
             String toGo = view.getEngine().getLocation();   // get current location
             address.setText(toGo);                          // set address bar
+            
         });                                                 // end of link clicked lambda
 
+        back.setOnMouseClicked(e -> {
+            view.getEngine().load(history[0]);
+            address.setText(view.getEngine().getLocation());
+        });
+
+        view.getEngine().locationProperty().addListener(ov -> {
+            if (history[1] == null) {
+                if (history[0] == null) {
+                    history[0] = view.getEngine().getLocation();
+                }
+                else {
+                    history[1] = view.getEngine().getLocation();
+                }
+            }
+            else {
+                history[0] = history[1];
+                history[1] = view.getEngine().getLocation();
+            }
+            System.out.println(history[0] + ", " + history[1]);
+        });
+        history[0] = view.getEngine().getLocation();
         title.textProperty().bind(view.getEngine().titleProperty());    // bind the title of the webpage to a label
         bottom.getChildren().add(about);                                // add the about button the bottom
         bottom.getChildren().add(title);                                // add the title label to the bottom
