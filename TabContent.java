@@ -4,14 +4,14 @@
 // - two types of javafx panes                      (done)
 // - six types of nodes                             (done)
 // - an animation                                   (done)
-// - demonstrate events, bindings and listeners     (missing a listener)
+// - demonstrate events, bindings and listeners     (done)
 //
 // Web browser specifics:
 // - Address bar, with ability to type a web address and load it        (done)
 // - Allow a user to browse a website                                   (done)
 // - Dropdown menu for adding favorite sites                            (done)
 // - Clicking on a link in dropdown loads it                            (done)
-// - Back button with 1-deep history (only load the previous site)
+// - Back button with 1-deep history (only load the previous site)      (done)
 // - Tabbed UI                                                          (done)
 // - Save bookmarks to file for permeance                               (done)
 // - If string typed in address bar isn't a web address, web search it  (done)
@@ -107,6 +107,21 @@ public class TabContent extends Red {
     public GridPane getTabContent () {      // get the tab contents
         return p;                           //
     }                                       //
+
+    public void historyPush () {                                // history stack maintainer
+        if (history[1] == null) {                               // if 1 is empty
+            if (history[0] == null) {                           // and 0 is empty
+                history[0] = view.getEngine().getLocation();    // set 0
+            }                                                   //
+            else {                                              // if 1 is empty but 0 isn't
+                history[1] = view.getEngine().getLocation();    // set 1
+            }                                                   //
+        }                                                       //
+        else {                                                  // if 1 isn't empty
+            history[0] = history[1];                            // move 1 to 0
+            history[1] = view.getEngine().getLocation();        // set 1
+        }                                                       //
+    }                                                           //
     
     public TabContent () {                                      // start
         read();                                                 // read bookmarks
@@ -118,6 +133,7 @@ public class TabContent extends Red {
         address.setText(homePage);                              // setting the address bar to read the homepage url
         address.setPromptText("Enter a web address here...");   // setting prompt text
         view.getEngine().load(homePage);                        // loading the homepage
+        
         cbo.setOnAction(e -> {                                  // combobox lambda
             view.getEngine().load(cbo.getValue());              // load the address from the combobox
             address.setText(view.getEngine().getLocation());    // set the address bar text
@@ -140,37 +156,25 @@ public class TabContent extends Red {
             }                                                           // 
         });                                                             // end of address textfield lambda
 
-        about.setOnMouseClicked(e -> {
+        about.setOnMouseClicked(e -> {      // about button lambda
             Settings s = new Settings();    // use settings instead of constructing in lambda
             s.start();                      // start settings
-        });                                 //
+        });                                 // end about button lambda
 
         view.setOnMouseClicked(e -> {                       // link clicked lambda
             String toGo = view.getEngine().getLocation();   // get current location
             address.setText(toGo);                          // set address bar
-            
         });                                                 // end of link clicked lambda
 
-        back.setOnMouseClicked(e -> {
-            view.getEngine().load(history[0]);
-            address.setText(view.getEngine().getLocation());
-        });
+        back.setOnMouseClicked(e -> {                           // back button lambda
+            view.getEngine().load(history[0]);                  // load the value on the bottom of the history stack
+            address.setText(view.getEngine().getLocation());    // set address bar
+        });                                                     // end of back button lambda
 
-        view.getEngine().locationProperty().addListener(ov -> {
-            if (history[1] == null) {
-                if (history[0] == null) {
-                    history[0] = view.getEngine().getLocation();
-                }
-                else {
-                    history[1] = view.getEngine().getLocation();
-                }
-            }
-            else {
-                history[0] = history[1];
-                history[1] = view.getEngine().getLocation();
-            }
-            System.out.println(history[0] + ", " + history[1]);
-        });
+        view.getEngine().locationProperty().addListener(ov -> { // any time the location changes
+            historyPush();                                      // push the new location to the history stack
+        });                                                     //
+
         history[0] = view.getEngine().getLocation();
         title.textProperty().bind(view.getEngine().titleProperty());    // bind the title of the webpage to a label
         bottom.getChildren().add(about);                                // add the about button the bottom
