@@ -31,6 +31,7 @@ import javafx.scene.control.TextField;      //
 import javafx.scene.input.KeyCode;          //
 import javafx.scene.layout.GridPane;        //
 import javafx.scene.layout.HBox;            //
+import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;            //
 
 public class TabContent extends Red {
@@ -133,7 +134,7 @@ public class TabContent extends Red {
         address.setText(homePage);                              // setting the address bar to read the homepage url
         address.setPromptText("Enter a web address here...");   // setting prompt text
         view.getEngine().load(homePage);                        // loading the homepage
-        
+
         cbo.setOnAction(e -> {                                  // combobox lambda
             view.getEngine().load(cbo.getValue());              // load the address from the combobox
             address.setText(view.getEngine().getLocation());    // set the address bar text
@@ -177,8 +178,9 @@ public class TabContent extends Red {
 
         history[0] = view.getEngine().getLocation();
         title.textProperty().bind(view.getEngine().titleProperty());    // bind the title of the webpage to a label
+        StackPane titleContainer = new StackPane(title);
         bottom.getChildren().add(about);                                // add the about button the bottom
-        bottom.getChildren().add(title);                                // add the title label to the bottom
+        bottom.getChildren().add(titleContainer);                                // add the title label to the bottom
         p.add(bookmarks, 0, 0, 1, 1);       // add bookmark button
         p.add(back, 1, 0, 1, 1);            // add the back button
         p.add(address, 2, 0, 5, 1);         // add the address bar
