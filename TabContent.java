@@ -154,6 +154,7 @@ public class TabContent extends Red {
             if (e.getCode() == KeyCode.ENTER) {                         // if the key pressed is enter
                 String toLoad = this.parseText(address.getText());      // parse the text from the address bar
                 this.loadTheThing(toLoad);                              // load it
+                address.textProperty().bind(view.getEngine().locationProperty());
             }                                                           // 
         });                                                             // end of address textfield lambda
 
@@ -163,8 +164,9 @@ public class TabContent extends Red {
         });                                 // end about button lambda
 
         view.setOnMouseClicked(e -> {                       // link clicked lambda
-            String toGo = view.getEngine().getLocation();   // get current location
-            address.setText(toGo);                          // set address bar
+            // String toGo = view.getEngine().getLocation();   // get current location
+            // address.setText(toGo);                          // set address bar
+            address.textProperty().bind(view.getEngine().locationProperty());
         });                                                 // end of link clicked lambda
 
         back.setOnMouseClicked(e -> {                           // back button lambda
@@ -176,11 +178,14 @@ public class TabContent extends Red {
             historyPush();                                      // push the new location to the history stack
         });                                                     //
 
-        history[0] = view.getEngine().getLocation();
+        address.setOnMouseClicked(e -> {
+            address.textProperty().unbind();
+        });
+        history[0] = view.getEngine().getLocation();                    // set initial history
         title.textProperty().bind(view.getEngine().titleProperty());    // bind the title of the webpage to a label
-        StackPane titleContainer = new StackPane(title);
+        StackPane titleContainer = new StackPane(title);                // center the title vertically
         bottom.getChildren().add(about);                                // add the about button the bottom
-        bottom.getChildren().add(titleContainer);                                // add the title label to the bottom
+        bottom.getChildren().add(titleContainer);                       // add the title label to the bottom
         p.add(bookmarks, 0, 0, 1, 1);       // add bookmark button
         p.add(back, 1, 0, 1, 1);            // add the back button
         p.add(address, 2, 0, 5, 1);         // add the address bar
