@@ -1,2 +1,3 @@
 https://cs.usu.edu/
 http://www.google.com/search?q=tumblr+
+https://cs.usu.edu/people/office-hours

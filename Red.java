@@ -1,5 +1,3 @@
-// Wrapper for TabContent.java with tab support
-
 import javafx.application.Application;                  // all the imports
 import javafx.collections.ObservableList;               //
 import javafx.scene.Node;                               //
@@ -29,6 +27,16 @@ public class Red extends Application {
         }                                                                           //
         return toReturn;                                                            // return
     }                                                                               //
+
+    public WebView getView (GridPane gp) {
+        ObservableList<Node> nodes = gp.getChildren();
+        for (Node i : nodes) {
+            if (GridPane.getColumnIndex(i) == 0 && GridPane.getRowIndex(i) == 2) {
+                return (WebView) i;
+            }
+        }
+        return null;
+    }
     
     public void newTab () {                                                             // make a new tab
         Tab nextTab = new Tab();                                                        // make the tab
